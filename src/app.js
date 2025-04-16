@@ -6,9 +6,9 @@ async function loadCars() {
         const cars = await res.json()
         console.log(cars);
         funcCras(cars)
+        editCars()
         btnfn()
         formfn()
-        deleteCars()
     } catch (err) {
         console.log(err);
     }
@@ -51,7 +51,7 @@ function postUrl(form) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(cars)
-    })
+    }).then(() => location.reload())
 
 
 }
@@ -61,18 +61,20 @@ function funcCras(arr) {
     arr.forEach(item => {
         let ul = document.createElement('ul')
         ul.innerHTML = `
-            <li>${item.name}</li>
-            <li>${item.madel}</li>
-            <li>${item.price}$</li>
-            <div className="btnItem">
-           <button class='delete' data-id="${item.id}">delete</button>
-            </div>
+        <li>${item.name}</li>
+        <li>${item.madel}</li>
+        <li>${item.price}</li>
+        <div className="btnItem">
+        <button class='edit' data-id='${item.id}'>Edit</button>
+        <button class='delete' data-id="${item.id}">delete</button>
+        </div>
             `
 
         itemCar.appendChild(ul)
 
-    });
+    })
     deleteCars()
+    editCars()
 }
 function deleteCars() {
     let deletebtn = document.querySelectorAll('.delete')
@@ -84,11 +86,21 @@ function deleteCars() {
             const id = btn.getAttribute('data-id')
 
             fetch(`${base_url}/${id}`, {
-
                 method: 'DELETE'
-            })
+            }).then(() => location.reload())
 
 
+        })
+    })
+}
+
+function editCars() {
+    let edit = document.querySelectorAll('.edit')
+
+    edit.forEach(item => {
+        item.addEventListener('click', () => {
+            let id = item.getAttribute('data-id')
+            console.log(id);
         })
     })
 }
